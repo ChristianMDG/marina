@@ -15,6 +15,16 @@ OBJS = $(SOURCES:.ml=.cmo)
 $(EXEC): $(OBJS)
 	$(CAMLC) $(CUSTOM) -o $(EXEC) $(LIBS) $(OBJS)
 
+# Serveur HTTP (module Unix stdlib uniquement, pas de dependance externe)
+SERVER_EXEC = marina-server
+SERVER_OBJS = my.cmo prop.cmo sat_ifexpr.cmo marina.cmo server.cmo
+SERVER_LIBS = unix.cma str.cma
+
+server: depend $(SERVER_EXEC)
+
+$(SERVER_EXEC): $(SERVER_OBJS)
+	$(CAMLC) $(CUSTOM) -o $(SERVER_EXEC) $(SERVER_LIBS) $(SERVER_OBJS)
+
 .SUFFIXES: .ml .mli .cmo .cmi
 
 %.cmo: %.ml
@@ -30,7 +40,7 @@ doc: all
 
 clean:
 	rm -f *.cm[io] *~ .*~ #*#
-	rm -f $(EXEC)
+	rm -f $(EXEC) $(SERVER_EXEC)
 	rm -rf doc
 	rm .depend
 
